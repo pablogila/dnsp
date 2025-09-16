@@ -3,13 +3,13 @@
 # This file is part of the DNS My Potato (DNSMP) systemd service.
 # https://github.com/pablogila/dnsmp
 
-version="v1.0.0a1"
+version="v1.0.0"
 
 if [ "$1" = "version" ]; then
     echo "$version"
 
 elif [ "$1" = "status" ]; then
-    echo "dnsmp configuration:"
+    echo "DNSMP configuration:"
     cat /usr/local/sbin/dnsmp-curl
     echo ""
     echo "Service status:"
@@ -28,6 +28,12 @@ elif [ "$1" = "force" ]; then
     /usr/local/sbin/dnsmp-curl
 
 elif [ "$1" = "stop" ]; then
+    echo "This might disrupt current SSH connections!"
+    read -p "Do you really want to stop dnsmp? [Y/N]: " confirm_stop
+    if [[ ! "$confirm_stop" =~ ^([Yy][Ee][Ss]|[Yy])$ ]]; then
+        echo "Stop cancelled."
+        exit 0
+    fi
     systemctl stop dnsmp.timer
     systemctl disable dnsmp.timer
     systemctl daemon-reload
@@ -41,13 +47,13 @@ elif [ "$1" = "backup" ]; then
     cp /usr/local/sbin/dnsmp-curl ./dnsmp-curl_backup
     chmod 766 ./dnsmp-curl_backup
     echo "Created ~/dnsmp-curl_backup. Restore it with:"
-    echo " sudo cp ./dnsmp-curl_backup /usr/local/sbin/dnsmp-curl"
+    echo "sudo cp ./dnsmp-curl_backup /usr/local/sbin/dnsmp-curl"
 
 elif [ "$1" = "uninstall" ]; then
     echo "This might disrupt current SSH connections!"
     echo "Remember that you can backup your configs with 'sudo dnsmp backup'"
-    read -p "Do you really want to uninstall dnsmp? [Y/N]: " confirm
-    if [[ ! "$confirm" =~ ^([Yy][Ee][Ss]|[Yy])$ ]]; then
+    read -p "Do you really want to uninstall dnsmp? [Y/N]: " confirm_uninstall
+    if [[ ! "$confirm_uninstall" =~ ^([Yy][Ee][Ss]|[Yy])$ ]]; then
         echo "Uninstall cancelled."
         exit 0
     fi

@@ -16,7 +16,7 @@ fi
 cp src/dnsmp.timer src/dnsmp.service /etc/systemd/system/
 chmod 644 /etc/systemd/system/dnsmp.timer /etc/systemd/system/dnsmp.service
 cp src/dnsmp /usr/local/sbin/
-cp -n src/dnsmp-curl /usr/local/sbin/  # Do NOT overwrite previous user's configs
+cp --update=none src/dnsmp-curl /usr/local/sbin/  # Do NOT overwrite previous user's configs
 chmod 744 /usr/local/sbin/dnsmp /usr/local/sbin/dnsmp-curl
 
 nano /usr/local/sbin/dnsmp-curl

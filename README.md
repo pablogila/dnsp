@@ -1,4 +1,4 @@
-# DNS my Potato
+# DNS My Potato
 
 DNS My Potato (DNSMP) is a systemd service to update your IP to an external Dynamic DNS service. 
 
