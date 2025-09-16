@@ -1,0 +1,12 @@
+# /etc/systemd/system/dnsmp.service
+# This file is part of the DNS My Potato (DNSMP) systemd service.
+# https://github.com/pablogila/dnsmp
+
+[Unit]
+Description=DNS My Potato: Update your IP to external Dynamic DNS services.
+Wants=network.target
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/dnsmp-curl

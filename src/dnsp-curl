@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# Welcome to DNS My Potato (DNSMP) https://github.com/pablogila/dnsmp
+#
+# Write below all the curl/wget calls to update the IP to your DNS provider,
+# then save this file with CTRL+X, and confirm with Y and ENTER.
+# Example:
+# curl -s https://freedns.afraid.org/dynamic/update.YOUR.LINK.ETC...
+

@@ -1,0 +1,15 @@
+# /etc/systemd/system/dnsmp.timer
+# This file is part of the DNS My Potato (DNSMP) systemd service.
+# https://github.com/pablogila/dnsmp
+
+[Unit]
+Description=DNS My Potato: Update your IP to external Dynamic DNS services.
+
+[Timer]
+OnBootSec=0
+OnCalendar=*-*-* *:0/5:00
+RandomizedDelaySec=30s
+Persistent=true
+
+[Install]
+WantedBy=timers.target

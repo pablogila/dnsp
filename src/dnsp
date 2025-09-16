@@ -1,0 +1,80 @@
+#!/bin/bash
+# /usr/local/sbin/dnsmp
+# This file is part of the DNS My Potato (DNSMP) systemd service.
+# https://github.com/pablogila/dnsmp
+
+version="v1.0.0a1"
+
+if [ "$1" = "version" ]; then
+    echo "$version"
+
+elif [ "$1" = "status" ]; then
+    echo "dnsmp configuration:"
+    cat /usr/local/sbin/dnsmp-curl
+    echo ""
+    echo "Service status:"
+    systemctl status dnsmp.timer
+
+elif [ "$1" = "log" ]; then
+    sudo journalctl -u dnsmp -r
+
+elif [ "$1" = "set" ]; then
+    # Update links
+    nano /usr/local/sbin/dnsmp-curl
+    systemctl daemon-reload
+    echo "Configuration updated successfully!"
+
+elif [ "$1" = "force" ]; then
+    /usr/local/sbin/dnsmp-curl
+
+elif [ "$1" = "stop" ]; then
+    systemctl stop dnsmp.timer
+    systemctl disable dnsmp.timer
+    systemctl daemon-reload
+
+elif [ "$1" = "start" ]; then
+    systemctl daemon-reload
+    systemctl enable dnsmp.timer
+    systemctl start dnsmp.timer
+
+elif [ "$1" = "backup" ]; then
+    cp /usr/local/sbin/dnsmp-curl ./dnsmp-curl_backup
+    chmod 766 ./dnsmp-curl_backup
+    echo "Created ~/dnsmp-curl_backup. Restore it with:"
+    echo " sudo cp ./dnsmp-curl_backup /usr/local/sbin/dnsmp-curl"
+
+elif [ "$1" = "uninstall" ]; then
+    echo "This might disrupt current SSH connections!"
+    echo "Remember that you can backup your configs with 'sudo dnsmp backup'"
+    read -p "Do you really want to uninstall dnsmp? [Y/N]: " confirm
+    if [[ ! "$confirm" =~ ^([Yy][Ee][Ss]|[Yy])$ ]]; then
+        echo "Uninstall cancelled."
+        exit 0
+    fi
+    echo "Removing DNS my Potato..."
+    systemctl stop dnsmp.timer
+    systemctl disable dnsmp.timer
+    rm -rf /etc/systemd/system/dnsmp.timer /etc/systemd/system/dnsmp.service
+    rm -rf /usr/local/sbin/dnsmp /usr/local/sbin/dnsmp-curl
+    systemctl daemon-reload
+    echo "All clear."
+
+else
+    echo ""
+    echo "DNS My Potato user commands:"
+    echo ""
+    echo "sudo dnsmp help         Show this help message"
+    echo "sudo dnsmp version      Print the software version"
+    echo "sudo dnsmp status       Check the service status"
+    echo "sudo dnsmp log          View warning logs"
+    echo "sudo dnsmp set          Set new update commands"
+    echo "sudo dnsmp force        Force a manual update now"
+    echo "sudo dnsmp stop         Stop the service"
+    echo "sudo dnsmp start        Start the service"
+    echo "sudo dnsmp backup       Backup user's DNS update script"
+    echo "sudo dnsmp uninstall    Uninstall the service"
+    echo ""
+    echo "Visit the project page for more info and updates:"
+    echo "https://github.com/pablogila/dnsmp"
+    echo ""
+fi
